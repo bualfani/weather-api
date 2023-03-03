@@ -1,2 +1,2 @@
 # Purpose of application
-weather api that to serve historical weather data.
+weather api that serves historical weather data.
