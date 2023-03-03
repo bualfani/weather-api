@@ -17,7 +17,24 @@ def about(station, date):
     temperature = df.loc[df['    DATE'] == date]['   TG'].squeeze() / 10
     return {"Station": station,
             "Date": date,
-            "Temperature": temperature}
+            "Temperature": temperature * (9/5) + 32}
+
+
+@app.route("/api/v1/<station>")
+def all_data(station):
+    filename = 'data_small/TG_STAID' + str(station).zfill(6) + ".txt"
+    df = pd.read_csv(filename, skiprows=20, parse_dates=["    DATE"])
+    result = df.to_dict(orient="records")
+    return result
+
+
+@app.route("/api/v1/year/<station>/<year>")
+def year(station, year):
+    filename = 'data_small/TG_STAID' + str(station).zfill(6) + ".txt"
+    df = pd.read_csv(filename, skiprows=20)
+    df["    DATE"] = df["    DATE"].astype(str)
+    result = df[df["    DATE"].str.startswith(str(year))].to_dict(orient="records")
+    return result
 
 
 if __name__ == "__main__":
